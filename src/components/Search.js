@@ -1,10 +1,28 @@
-import {Link} from "react-router-dom";
+import {Link, Navigate} from "react-router-dom";
 import React, {useState} from 'react';
 
 export function Search(){
 
     const [value, setValue] = useState("")
     const [beers, setBeers] = useState([])
+    const [fireRedirect, setFireRedirect] = useState(false)
+    const [searchId, setSearchId]= useState("")
+
+    async function handleSearchId(){
+
+            const response = await fetch(`https://api.punkapi.com/v2/beers`)
+            if (response.status !== 200) {
+                throw new Error("Something went wrong ...")
+            }
+            const data = await response.json()
+
+            const result = data.filter((e) => e.name === value)[0]
+            console.log(result.id)
+            return result.id
+
+        }
+
+
 
     function handleSearch(event){
         setValue(event.target.value)
@@ -12,6 +30,10 @@ export function Search(){
 
     function handleSubmit(event) {
         event.preventDefault()
+        handleSearchId().then(res=>{setSearchId(res)
+            setFireRedirect(true)
+        })
+
 
 
     }
@@ -37,6 +59,9 @@ export function Search(){
                 <input type="text" id="search" value={value} onChange={handleSearch}/>
                 <button>find</button>
             </form>
+            {fireRedirect && (
+                <Navigate to={`/beer/${searchId}`}/>
+            )}
 
             <h1>~ Our beers ~</h1>
             <button onClick={handleShow}>Show</button>
@@ -69,5 +94,5 @@ export function Search(){
             )}
         </div>
     );
-
 }
+

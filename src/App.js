@@ -7,6 +7,7 @@ import {
 import './App.css';
 import {Search} from "./components/Search";
 import {DetailView} from "./components/DetailView";
+import NoMatch from "./components/NoMatch";
 
 
 
@@ -18,6 +19,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Search/>}></Route>
                 <Route path="/beer/:id" element={<DetailView/>}></Route>
+                <Route path="*" element={<NoMatch />} />
 
             </Routes>
 
